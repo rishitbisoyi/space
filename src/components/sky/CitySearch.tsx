@@ -14,9 +14,7 @@ export default function CitySearch({ onSearch, loading }: CitySearchProps) {
 
   function handleSubmit() {
     const trimmed = value.trim();
-    if (trimmed && !loading) {
-      onSearch(trimmed.toUpperCase());
-    }
+    if (trimmed && !loading) onSearch(trimmed.toUpperCase());
   }
 
   function handleKey(e: KeyboardEvent<HTMLInputElement>) {
@@ -27,12 +25,12 @@ export default function CitySearch({ onSearch, loading }: CitySearchProps) {
     <div className="mc-panel">
       <div className="mc-panel-header">
         <span className="status-led cyan" />
-        <span className="mc-panel-title">CITY TERMINAL</span>
+        CITY TERMINAL
         <span className="mc-panel-sub">GEOCODING UPLINK ACTIVE</span>
       </div>
       <div className="mc-panel-body">
         <div className="city-search-row">
-          <span className="city-prompt">LOCATION: </span>
+          <span className="city-prompt">LOCATION:</span>
           <input
             className="city-input"
             type="text"
@@ -54,23 +52,19 @@ export default function CitySearch({ onSearch, loading }: CitySearchProps) {
         </div>
 
         <div className="quick-cities">
-  <span className="quick-label">QUICK SELECT:</span>
-
-  <div className="quick-cities-list">
-    {QUICK_CITIES.map((city) => (
-        <button
-            key={city}
-            className="quick-btn"
-            onClick={() => {
-            setValue(city);
-            onSearch(city);
-            }}
-            disabled={loading}
-                >
+          <span className="quick-label">QUICK SELECT:</span>
+          <div className="quick-cities-list">
+            {QUICK_CITIES.map((city) => (
+              <button
+                key={city}
+                className="quick-btn"
+                onClick={() => { setValue(city); onSearch(city); }}
+                disabled={loading}
+              >
                 {city}
-                </button>
-                ))}
-            </div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

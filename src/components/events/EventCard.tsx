@@ -14,182 +14,177 @@ interface CountdownTime {
   seconds: number;
 }
 
-export default function EventCard({ event }: EventCardProps) {
-  const [countdown, setCountdown] = useState<CountdownTime>({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+const typeColors: Record<string, { led: string; color: string; glow: string }> = {
+  solar:               { led: "amber", color: "var(--amber)", glow: "var(--glow-amber)" },
+  lunar:               { led: "cyan",  color: "var(--cyan)",  glow: "var(--glow-cyan)"  },
+  meteor_shower:       { led: "red",   color: "var(--red)",   glow: "var(--glow-red)"   },
+  planet_conjunction:  { led: "cyan",  color: "var(--cyan)",  glow: "var(--glow-cyan)"  },
+};
 
+const defaultType = { led: "green", color: "var(--green)", glow: "var(--glow-green)" };
+
+export default function EventCard({ event }: EventCardProps) {
+  const [countdown, setCountdown] = useState<CountdownTime>({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [eventStatus, setEventStatus] = useState<'upcoming' | 'active' | 'completed'>('upcoming');
 
   useEffect(() => {
-    const updateCountdown = () => {
-      const eventDate = new Date(event.date).getTime();
-      const now = new Date().getTime();
-      const difference = eventDate - now;
-
-      if (difference < 0) {
+    const update = () => {
+      const diff = new Date(event.date).getTime() - Date.now();
+      if (diff < 0) {
         setEventStatus('completed');
         setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-      } else if (difference < 86400000) {
-        // Less than 1 day
-        setEventStatus('active');
-        const seconds = Math.floor((difference / 1000) % 60);
-        const minutes = Math.floor((difference / 1000 / 60) % 60);
-        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-        setCountdown({ days: 0, hours, minutes, seconds });
       } else {
-        setEventStatus('upcoming');
-        const seconds = Math.floor((difference / 1000) % 60);
-        const minutes = Math.floor((difference / 1000 / 60) % 60);
-        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        setCountdown({ days, hours, minutes, seconds });
+        setEventStatus(diff < 86400000 ? 'active' : 'upcoming');
+        setCountdown({
+          days:    Math.floor(diff / 86400000),
+          hours:   Math.floor((diff / 3600000) % 24),
+          minutes: Math.floor((diff / 60000) % 60),
+          seconds: Math.floor((diff / 1000) % 60),
+        });
       }
     };
-
-    updateCountdown();
-    const timer = setInterval(updateCountdown, 1000);
-    return () => clearInterval(timer);
+    update();
+    const t = setInterval(update, 1000);
+    return () => clearInterval(t);
   }, [event.date]);
 
-  const getTypeColor = (type: string): { border: string; text: string; badge: string } => {
-    switch (type) {
-      case 'solar':
-        return {
-          border: 'border-yellow-400',
-          text: 'text-yellow-400',
-          badge: 'badge-upcoming',
-        };
-      case 'lunar':
-        return {
-          border: 'border-blue-400',
-          text: 'text-blue-400',
-          badge: 'badge-upcoming',
-        };
-      case 'meteor_shower':
-        return {
-          border: 'border-red-400',
-          text: 'text-red-400',
-          badge: 'badge-upcoming',
-        };
-      case 'planet_conjunction':
-        return {
-          border: 'border-cyan-400',
-          text: 'text-cyan-400',
-          badge: 'badge-upcoming',
-        };
-      default:
-        return {
-          border: 'border-green-400',
-          text: 'text-green-400',
-          badge: 'badge-upcoming',
-        };
-    }
-  };
+  const tc = typeColors[event.type] ?? defaultType;
 
-  const getStatusBadgeClass = (): string => {
-    switch (eventStatus) {
-      case 'active':
-        return 'badge-active';
-      case 'completed':
-        return 'badge-completed';
-      default:
-        return 'badge-upcoming';
-    }
-  };
+  const statusLed = eventStatus === 'active' ? 'amber' : eventStatus === 'completed' ? 'red' : 'green';
+  const statusText = eventStatus === 'active' ? 'ACTIVE' : eventStatus === 'completed' ? 'COMPLETED' : 'UPCOMING';
 
-  const getStatusText = (): string => {
-    switch (eventStatus) {
-      case 'active':
-        return 'ACTIVE';
-      case 'completed':
-        return 'COMPLETED';
-      default:
-        return 'UPCOMING';
-    }
-  };
-
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  const colors = getTypeColor(event.type);
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
   return (
     <div
-      className={`stagger-item border-2 ${colors.border} p-4 bg-black/60 backdrop-blur-sm hover:bg-black/80 transition-all duration-300 font-mono text-sm relative overflow-hidden group hover-glow hover-scale`}
+      className="mc-panel"
+      style={{
+        borderColor: tc.color.replace('var(', '').replace(')', '') === '--amber'
+          ? 'rgba(255,176,0,0.25)'
+          : tc.color === 'var(--cyan)'
+          ? 'rgba(0,217,255,0.25)'
+          : tc.color === 'var(--red)'
+          ? 'rgba(255,77,77,0.25)'
+          : 'var(--border)',
+        transition: 'border-color 0.3s, box-shadow 0.3s',
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.boxShadow = tc.glow;
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+      }}
     >
-      {/* Animated glow background */}
-      <div
-        className={`absolute inset-0 ${colors.text} opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-300 pointer-events-none`}
-      />
+      {/* Panel header */}
+      <div className="mc-panel-header" style={{ fontSize: "0.85rem", letterSpacing: "2px" }}>
+        <span className={`status-led ${statusLed}`} />
+        <span style={{ color: tc.color, textShadow: tc.glow, flex: 1 }}>
+          {event.title.toUpperCase()}
+        </span>
+        <span style={{
+          fontSize: "0.6rem",
+          letterSpacing: "2px",
+          color: tc.color,
+          opacity: 0.7,
+          border: `1px solid ${tc.color}`,
+          padding: "1px 6px",
+        }}>
+          {statusText}
+        </span>
+      </div>
 
-      {/* Content */}
-      <div className="relative z-10">
-        {/* Header with title and status badge */}
-        <div className="flex justify-between items-start mb-3 gap-2">
-          <h3 className={`font-bold text-base flex-1 leading-tight ${colors.text}`}>
-            {event.title}
-          </h3>
-          <div
-            className={`flex-shrink-0 px-2 py-1 border border-current text-xs font-bold uppercase whitespace-nowrap badge-pulse ${getStatusBadgeClass()}`}
-          >
-            {getStatusText()}
-          </div>
-        </div>
-
-        {/* Event type tag */}
-        <div className={`mb-3 text-xs ${colors.text} opacity-75`}>
-          <span className={`inline-block px-2 py-1 border border-current ${colors.text}`}>
-            [{event.type.replace(/_/g, ' ')}]
+      <div className="mc-panel-body">
+        {/* Type + date row */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "0.6rem",
+          fontSize: "0.65rem",
+          letterSpacing: "2px",
+        }}>
+          <span style={{ color: tc.color, opacity: 0.65 }}>
+            [{event.type.replace(/_/g, ' ').toUpperCase()}]
+          </span>
+          <span style={{ color: "var(--amber)", opacity: 0.8 }}>
+            {formatDate(event.date)}
           </span>
         </div>
 
-        {/* Date */}
-        <div className={`mb-3 text-xs ${colors.text} opacity-75 font-bold`}>
-          <span className="block">📅 {formatDate(event.date)}</span>
-        </div>
-
         {/* Description */}
-        <p className={`text-xs leading-relaxed ${colors.text} opacity-90 mb-4 min-h-[40px]`}>
+        <p style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "0.75rem",
+          color: "rgba(0,255,136,0.6)",
+          lineHeight: 1.7,
+          letterSpacing: "0.5px",
+          marginBottom: "0.75rem",
+          minHeight: "2.8rem",
+        }}>
           {event.description}
         </p>
 
-        {/* Countdown Timer */}
+        {/* Countdown */}
         {eventStatus !== 'completed' && (
-          <div className={`border-t ${colors.text} pt-3 mt-3 text-xs`}>
-            <div className={`${colors.text} opacity-75 mb-2`}>⏱️ EVENT STARTS IN:</div>
-            <div className="grid grid-cols-4 gap-1 text-center font-bold">
-              <div className={`bg-black/50 p-2 border border-current ${colors.text}`}>
-                <div className="text-sm">{countdown.days}</div>
-                <div className={`text-xs ${colors.text} opacity-75`}>DAYS</div>
-              </div>
-              <div className={`bg-black/50 p-2 border border-current ${colors.text}`}>
-                <div className="text-sm">{String(countdown.hours).padStart(2, '0')}</div>
-                <div className={`text-xs ${colors.text} opacity-75`}>HRS</div>
-              </div>
-              <div className={`bg-black/50 p-2 border border-current ${colors.text}`}>
-                <div className="text-sm">{String(countdown.minutes).padStart(2, '0')}</div>
-                <div className={`text-xs ${colors.text} opacity-75`}>MIN</div>
-              </div>
-              <div className={`bg-black/50 p-2 border border-current ${colors.text}`}>
-                <div className="text-sm">{String(countdown.seconds).padStart(2, '0')}</div>
-                <div className={`text-xs ${colors.text} opacity-75`}>SEC</div>
-              </div>
+          <>
+            <div style={{
+              fontSize: "0.6rem",
+              letterSpacing: "3px",
+              color: "rgba(0,255,136,0.35)",
+              marginBottom: "0.4rem",
+            }}>
+              T-MINUS
             </div>
-          </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "0.4rem" }}>
+              {[
+                { val: countdown.days,    unit: "DAYS" },
+                { val: countdown.hours,   unit: "HRS"  },
+                { val: countdown.minutes, unit: "MIN"  },
+                { val: countdown.seconds, unit: "SEC"  },
+              ].map(({ val, unit }) => (
+                <div
+                  key={unit}
+                  style={{
+                    background: "rgba(0,0,0,0.4)",
+                    border: `1px solid ${tc.color}33`,
+                    padding: "0.4rem 0",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{
+                    fontFamily: "var(--font-display)",
+                    fontSize: "1.4rem",
+                    color: tc.color,
+                    textShadow: tc.glow,
+                    lineHeight: 1,
+                  }}>
+                    {String(val).padStart(2, '0')}
+                  </div>
+                  <div style={{
+                    fontSize: "0.55rem",
+                    letterSpacing: "2px",
+                    color: `${tc.color}80`,
+                    marginTop: "2px",
+                  }}>
+                    {unit}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
 
         {/* Footer */}
-        <div className={`mt-3 pt-3 border-t border-current ${colors.text} opacity-50 text-xs`}>
+        <div style={{
+          marginTop: "0.75rem",
+          paddingTop: "0.5rem",
+          borderTop: "1px solid var(--border-dim)",
+          fontSize: "0.6rem",
+          letterSpacing: "2px",
+          color: "rgba(0,255,136,0.2)",
+        }}>
           ID: {event.id}
         </div>
       </div>

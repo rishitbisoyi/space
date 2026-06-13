@@ -116,7 +116,7 @@ export default function ISSDashboard() {
         <span className="status-led green" />
         LIVE TELEMETRY
         <span style={{ marginLeft: "auto", fontSize: "0.65rem", letterSpacing: "3px", color: "rgba(0,255,136,0.4)" }}>
-          FEED ACTIVE · 5s REFRESH
+          FEED ACTIVE · 15s REFRESH
         </span>
       </div>
 

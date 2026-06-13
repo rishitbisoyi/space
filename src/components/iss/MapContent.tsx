@@ -62,11 +62,42 @@ function RecenterMap({ lat, lng }: { lat: number; lng: number }) {
 }
 
 /* ── Future path estimation ────────────────────────────── */
-function generateFuturePath(lat: number, lng: number): [number, number][] {
-  return Array.from({ length: 30 }, (_, i) => [
-    lat + i * 0.4,
-    lng + i * 0.8,
-  ]);
+function generateFuturePath(
+  history: [number, number][]
+): [number, number][] {
+  if (history.length < 2) {
+    return [];
+  }
+
+  const last =
+    history[history.length - 1];
+
+  const prev =
+    history[history.length - 2];
+
+  const latStep =
+    last[0] - prev[0];
+
+  const lonStep =
+    last[1] - prev[1];
+
+  const future: [
+    number,
+    number
+  ][] = [];
+
+  for (
+    let i = 1;
+    i <= 25;
+    i++
+  ) {
+    future.push([
+      last[0] + latStep * i,
+      last[1] + lonStep * i,
+    ]);
+  }
+
+  return future;
 }
 
 /* ── Boot loader ───────────────────────────────────────── */
@@ -132,7 +163,10 @@ export default function MapContent() {
 
   const lat = data.latitude;
   const lng = data.longitude;
-  const futurePath = generateFuturePath(lat, lng);
+  const futurePath =
+  generateFuturePath(
+    history
+  );
 
   return (
     <div style={{ position: "relative" }}>
@@ -210,16 +244,17 @@ export default function MapContent() {
           />
         )}
 
-        {/* Future predicted path — dashed green */}
-        <Polyline
-          positions={futurePath}
-          pathOptions={{
-            color:     "#00ff88",
-            weight:    2,
-            opacity:   0.5,
-            dashArray: "8 8",
-          }}
-        />
+        {futurePath.length > 1 && (
+  <Polyline
+    positions={futurePath}
+    pathOptions={{
+      color: "#00ff88",
+      weight: 2,
+      opacity: 0.5,
+      dashArray: "8 8",
+    }}
+  />
+)}
 
         {/* Coverage footprint */}
         <Circle

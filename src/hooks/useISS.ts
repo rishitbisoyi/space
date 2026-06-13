@@ -4,25 +4,32 @@ import { useEffect, useState } from "react";
 import { ISSData } from "@/types/iss";
 
 export function useISS() {
-  const [data, setData] =
-    useState<ISSData | null>(null);
+  const [data, setData] = useState<ISSData | null>(null);
 
-  const [history, setHistory] =
-    useState<[number, number][]>([]);
+  const [history, setHistory] = useState<
+    [number, number][]
+  >([]);
 
   useEffect(() => {
     async function getISS() {
       try {
         const res = await fetch("/api/iss");
 
+        if (!res.ok) {
+          throw new Error(
+            "ISS API unavailable"
+          );
+        }
+
         const json = await res.json();
 
-        setData(json);
-
+        // Only update if valid ISS data exists
         if (
           json?.latitude !== undefined &&
           json?.longitude !== undefined
         ) {
+          setData(json);
+
           const lat = Number(
             json.latitude
           );
@@ -34,7 +41,10 @@ export function useISS() {
           setHistory((prev) => {
             const updated = [
               ...prev,
-              [lat, lon] as [number, number],
+              [lat, lon] as [
+                number,
+                number
+              ],
             ];
 
             return updated.slice(-200);
@@ -45,6 +55,10 @@ export function useISS() {
           "ISS fetch error:",
           error
         );
+
+        // IMPORTANT:
+        // Do NOT clear data.
+        // Keep last valid telemetry visible.
       }
     }
 
@@ -52,7 +66,7 @@ export function useISS() {
 
     const interval = setInterval(
       getISS,
-      5000
+      15000 // 15 seconds instead of 5
     );
 
     return () =>

@@ -7,6 +7,7 @@ import SystemStatus    from "@/components/iss/SystemStatus";
 import ISSFacts        from "@/components/iss/ISSFacts";
 import StarField       from "@/components/retro/StarField";
 import MissionHeader   from "@/components/iss/MissionHeader";
+import BackToDashboard from "@/components/common/BackToDashboard";
 
 export default function ISSTrackerPage() {
   return (
@@ -18,6 +19,16 @@ export default function ISSTrackerPage() {
 
         {/* ── HEADER ────────────────────────────────────── */}
         <MissionHeader />
+
+        <div
+  style={{
+    maxWidth: "1700px",
+    margin: "0 auto 1.25rem auto",
+    padding: "1.25rem 1.25rem 0",
+  }}
+>
+  <BackToDashboard />
+</div>
 
         <main
           style={{

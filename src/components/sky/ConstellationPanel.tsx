@@ -2,9 +2,7 @@
 
 import { Constellation } from "@/types/sky";
 
-interface ConstellationPanelProps {
-  constellations: Constellation[];
-}
+interface ConstellationPanelProps { constellations: Constellation[]; }
 
 const LED_COLORS = ["green", "cyan", "amber", "green", "cyan"] as const;
 
@@ -13,7 +11,8 @@ export default function ConstellationPanel({ constellations }: ConstellationPane
     <div className="mc-panel">
       <div className="mc-panel-header">
         <span className="status-led cyan" />
-        <span className="mc-panel-title">CONSTELLATIONS TONIGHT</span>
+        CONSTELLATIONS TONIGHT
+        <span className="mc-panel-sub">{constellations.length} ACQUIRED</span>
       </div>
       <div className="mc-panel-body">
         <div className="const-list">

@@ -6,28 +6,41 @@ import { Event } from "@/types/event";
 
 const UpcomingEvents = () => {
   return (
-    <section className="w-full">
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-5 slide-in-left">
-        <span className="text-green-500 text-lg">◈</span>
-        <h2 className="text-green-400 font-mono text-sm uppercase tracking-[0.3em] border-b border-green-800 pb-1 flex-1 crt-glow-dim">
-          Upcoming Celestial Events — {eventsData.length} RECORDS FOUND
-        </h2>
-        <span className="text-green-700 text-[10px] font-mono animate-pulse">● LIVE</span>
+    <div className="mc-panel">
+      <div className="mc-panel-header">
+        <span className="status-led green" />
+        UPCOMING CELESTIAL EVENTS
+        <span style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
+          <span style={{ fontSize: "0.6rem", letterSpacing: "2px", color: "rgba(0,255,136,0.4)" }}>
+            {eventsData.length} RECORDS
+          </span>
+          <span className="status-led red" style={{ width: "6px", height: "6px" }} />
+          <span style={{ fontSize: "0.6rem", letterSpacing: "2px", color: "var(--red)" }}>LIVE</span>
+        </span>
       </div>
-
-      {eventsData.length === 0 ? (
-        <p className="text-green-700 font-mono text-xs tracking-widest">
-          &gt; NO EVENTS FOUND IN STELLAR DATABASE_
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(eventsData as Event[]).map((event) => (
-  <EventCard key={event.id} event={event} />
-))}
-        </div>
-      )}
-    </section>
+      <div className="mc-panel-body">
+        {eventsData.length === 0 ? (
+          <p style={{
+            fontFamily: "var(--font-mono)",
+            color: "rgba(0,255,136,0.4)",
+            fontSize: "0.8rem",
+            letterSpacing: "3px",
+          }}>
+            › NO EVENTS FOUND IN STELLAR DATABASE_
+          </p>
+        ) : (
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: "0.75rem",
+          }}>
+            {(eventsData as Event[]).map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

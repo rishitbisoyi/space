@@ -17,6 +17,7 @@ import {
 } from "@/lib/constants/constellations";
 import { getConstellations } from "@/lib/api/constellations";
 import StarField from "@/components/retro/StarField";
+import BackToDashboard from "@/components/common/BackToDashboard";
 
 // ── Season icons (ASCII-safe, no emoji) ──────────────────────────────────────
 const SEASON_SIGILS: Record<string, string> = {
@@ -393,6 +394,16 @@ export default function ConstellationsPage() {
             </span>
           </div>
         </header>
+
+            <div
+  style={{
+    maxWidth: "1700px",
+    margin: "0 auto",
+    padding: "1rem 1.5rem 0",
+  }}
+>
+  <BackToDashboard />
+</div>
 
         {/* ── Main ── */}
         <main

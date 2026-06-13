@@ -10,16 +10,16 @@ function getStatus(dateStr: string): "UPCOMING" | "ACTIVE" | "COMPLETED" {
   return "UPCOMING";
 }
 
-const statusDot: Record<string, string> = {
-  UPCOMING:  "bg-green-400 shadow-green-400/60",
-  ACTIVE:    "bg-yellow-300 shadow-yellow-300/60",
-  COMPLETED: "bg-gray-600",
+const statusLed: Record<string, string> = {
+  UPCOMING:  "green",
+  ACTIVE:    "amber",
+  COMPLETED: "red",
 };
 
-const statusLabel: Record<string, string> = {
-  UPCOMING:  "text-green-400",
-  ACTIVE:    "text-yellow-300",
-  COMPLETED: "text-gray-600",
+const statusColor: Record<string, string> = {
+  UPCOMING:  "var(--green)",
+  ACTIVE:    "var(--amber)",
+  COMPLETED: "rgba(255,77,77,0.5)",
 };
 
 const EventCalendar = () => {
@@ -30,36 +30,38 @@ const EventCalendar = () => {
   );
 
   return (
-    <section className="w-full mb-10 slide-in-left">
-
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <span className="text-green-500 text-lg">◈</span>
-        <h2 className="text-green-400 font-mono text-sm uppercase tracking-[0.3em] border-b border-green-800 pb-1 flex-1 crt-glow-dim">
-          Mission Timeline — Deep Space Network
-        </h2>
-        <span className="text-green-700 font-mono text-[10px]">
-          {new Date().toISOString().slice(0, 10)} UTC
+    <div className="mc-panel">
+      <div className="mc-panel-header">
+        <span className="status-led cyan" />
+        MISSION TIMELINE
+        <span style={{ marginLeft: "auto", color: "rgba(0,255,136,0.4)", fontSize: "0.7rem", letterSpacing: "2px" }}>
+          {new Date().toISOString().slice(0, 10)} UTC · CHRONOLOGICAL
         </span>
       </div>
-
-      {/* Table */}
-      <div className="border border-green-900 rounded bg-black/60 overflow-hidden">
-
+      <div className="mc-panel-body" style={{ padding: "0" }}>
         {/* Column labels */}
-        <div className="grid grid-cols-12 px-4 py-2 text-green-800 text-[10px] uppercase tracking-widest font-mono border-b border-green-900/60">
-          <span className="col-span-1">#</span>
-          <span className="col-span-2">STATUS</span>
-          <span className="col-span-3">DATE</span>
-          <span className="col-span-4">MISSION</span>
-          <span className="col-span-2 text-right">TYPE</span>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "2rem 5.5rem 7rem 1fr 6rem",
+            padding: "0.4rem 1rem",
+            borderBottom: "1px solid var(--border-dim)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "0.6rem",
+            letterSpacing: "3px",
+            color: "rgba(0,255,136,0.3)",
+          }}
+        >
+          <span>#</span>
+          <span>STATUS</span>
+          <span>DATE</span>
+          <span>MISSION</span>
+          <span style={{ textAlign: "right" }}>TYPE</span>
         </div>
 
-        {/* Rows */}
         {sorted.map((event, index) => {
           const status = getStatus(event.date);
           const isHovered = hoveredId === event.id;
-
           const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
             year: "numeric", month: "short", day: "numeric", timeZone: "UTC",
           });
@@ -69,62 +71,96 @@ const EventCalendar = () => {
               key={event.id}
               onMouseEnter={() => setHoveredId(event.id)}
               onMouseLeave={() => setHoveredId(null)}
-              data-event-id={event.id}
-              className={`
-                border-b border-green-900/30 last:border-b-0
-                px-4 py-3 font-mono text-xs cursor-default select-none
-                transition-colors duration-150
-                ${isHovered ? "bg-green-950/40" : "bg-transparent"}
-              `}
+              style={{
+                borderBottom: "1px solid var(--border-dim)",
+                background: isHovered ? "rgba(0,255,136,0.04)" : "transparent",
+                transition: "background 0.15s",
+                cursor: "default",
+              }}
             >
-              <div className="grid grid-cols-12 items-center">
-                {/* Index */}
-                <span className="col-span-1 text-green-800">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "2rem 5.5rem 7rem 1fr 6rem",
+                  alignItems: "center",
+                  padding: "0.6rem 1rem",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.75rem",
+                  letterSpacing: "1px",
+                }}
+              >
+                <span style={{ color: "rgba(0,255,136,0.25)" }}>
                   {String(index + 1).padStart(2, "0")}
                 </span>
-
-                {/* Status */}
-                <span className="col-span-2 flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full shadow-md ${statusDot[status]} ${status !== "COMPLETED" ? "animate-pulse" : ""}`} />
-                  <span className={`text-[10px] tracking-wider ${statusLabel[status]}`}>
+                <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span className={`status-led ${statusLed[status]}`} style={{ width: "7px", height: "7px" }} />
+                  <span style={{ fontSize: "0.6rem", letterSpacing: "2px", color: statusColor[status] }}>
                     {status}
                   </span>
                 </span>
-
-                {/* Date */}
-                <span className={`col-span-3 tracking-wide transition-colors duration-150 ${isHovered ? "text-green-300" : "text-green-600"}`}>
+                <span style={{ color: isHovered ? "var(--green)" : "rgba(0,255,136,0.45)" }}>
                   {formattedDate}
                 </span>
-
-                {/* Title */}
-                <span className={`col-span-4 uppercase tracking-wider transition-colors duration-150 ${isHovered ? "text-green-200 crt-glow-dim" : "text-green-400"}`}>
-                  {event.title}
+                <span style={{
+                  color: isHovered ? "var(--green)" : "rgba(0,255,136,0.75)",
+                  textShadow: isHovered ? "var(--glow-green)" : "none",
+                  letterSpacing: "2px",
+                  fontSize: "0.72rem",
+                  transition: "color 0.15s",
+                }}>
+                  {event.title.toUpperCase()}
                 </span>
-
-                {/* Type */}
-                <span className="col-span-2 text-right text-green-700 text-[10px] uppercase tracking-wider">
-                  {event.type}
+                <span style={{
+                  textAlign: "right",
+                  color: "rgba(0,217,255,0.5)",
+                  fontSize: "0.6rem",
+                  letterSpacing: "2px",
+                }}>
+                  {event.type.replace(/_/g, " ").toUpperCase()}
                 </span>
               </div>
 
-              {/* Expandable detail */}
-              <div className={`overflow-hidden transition-all duration-200 ${isHovered ? "max-h-20 opacity-100 pt-2 mt-1 border-t border-green-900/40" : "max-h-0 opacity-0"}`}>
-                <p className="text-green-600 text-[11px] leading-relaxed">
-                  &gt; {event.description}
+              {/* Expandable row */}
+              <div style={{
+                overflow: "hidden",
+                maxHeight: isHovered ? "3rem" : "0",
+                opacity: isHovered ? 1 : 0,
+                transition: "max-height 0.2s ease, opacity 0.2s ease",
+                padding: isHovered ? "0 1rem 0.6rem 4.5rem" : "0 1rem 0 4.5rem",
+              }}>
+                <p style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "0.7rem",
+                  color: "rgba(0,255,136,0.45)",
+                  letterSpacing: "1px",
+                  margin: 0,
+                  borderTop: "1px solid var(--border-dim)",
+                  paddingTop: "0.4rem",
+                }}>
+                  › {event.description}
                 </p>
               </div>
             </div>
           );
         })}
-      </div>
 
-      {/* Footer */}
-      <div className="flex justify-between items-center mt-2 px-1 font-mono text-[10px] text-green-800">
-        <span>RECORDS: {sorted.length} / {sorted.length}</span>
-        <span>SORT: CHRONOLOGICAL ASC</span>
-        <span>SOURCE: STELLAR-DB v4.1</span>
+        {/* Footer row */}
+        <div style={{
+          padding: "0.5rem 1rem",
+          display: "flex",
+          justifyContent: "space-between",
+          fontFamily: "var(--font-mono)",
+          fontSize: "0.6rem",
+          letterSpacing: "2px",
+          color: "rgba(0,255,136,0.25)",
+          borderTop: "1px solid var(--border-dim)",
+        }}>
+          <span>RECORDS: {sorted.length} / {sorted.length}</span>
+          <span>SORT: CHRONOLOGICAL ASC</span>
+          <span>SOURCE: STELLAR-DB v4.1</span>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 

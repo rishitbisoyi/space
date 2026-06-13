@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function Hero() {
-  const utcTime = new Date().toUTCString();
+  const [utcTime, setUtcTime] = useState("");
+
+  useEffect(() => {
+    // Set initial time on client only — avoids SSR mismatch
+    setUtcTime(new Date().toUTCString());
+    const id = setInterval(() => setUtcTime(new Date().toUTCString()), 1000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="mc-panel">
@@ -14,16 +22,10 @@ export default function Hero() {
 
       <div
         className="mc-panel-body"
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
+        style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
       >
         <div>
-          <div className="section-eyebrow">
-            SPACE EXPLORATION PLATFORM
-          </div>
+          <div className="section-eyebrow">SPACE EXPLORATION PLATFORM</div>
 
           <h1
             style={{
@@ -48,32 +50,12 @@ export default function Hero() {
           </p>
         </div>
 
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-          }}
-        >
-          <Link href="/iss-tracker" className="quick-btn">
-            ISS TRACKER
-          </Link>
-
-          <Link href="/night-sky" className="quick-btn">
-            NIGHT SKY
-          </Link>
-
-          <Link href="/constellations" className="quick-btn">
-            CONSTELLATIONS
-          </Link>
-
-          <Link href="/celestial-events" className="quick-btn">
-            EVENTS
-          </Link>
-
-          <Link href="/planets" className="quick-btn">
-            PLANETS
-          </Link>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+          <Link href="/iss-tracker"      className="quick-btn">ISS TRACKER</Link>
+          <Link href="/night-sky"        className="quick-btn">NIGHT SKY</Link>
+          <Link href="/constellations"   className="quick-btn">CONSTELLATIONS</Link>
+          <Link href="/celestial-events" className="quick-btn">EVENTS</Link>
+          <Link href="/planets"          className="quick-btn">PLANETS</Link>
         </div>
 
         <div
@@ -81,9 +63,10 @@ export default function Hero() {
             fontSize: "0.8rem",
             letterSpacing: "2px",
             color: "rgba(0,255,136,0.45)",
+            minHeight: "1.2em", // prevents layout shift while empty on server
           }}
         >
-          UTC TIME :: {utcTime}
+          {utcTime ? `UTC TIME :: ${utcTime}` : ""}
         </div>
       </div>
     </div>

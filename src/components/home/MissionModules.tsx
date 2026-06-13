@@ -33,12 +33,6 @@ const modules = [
     status: "DEVELOPING",
     description: "Solar system exploration module",
   },
-  {
-    title: "MISSION CONTROL",
-    href: "/mission-control",
-    status: "RESERVED",
-    description: "Future advanced operations center",
-  },
 ];
 
 export default function MissionModules() {
