@@ -1,0 +1,107 @@
+[
+  {
+    "name": "ORION",
+    "abbreviation": "ORI",
+    "viewingWindow": "20:00 – 03:00",
+    "description": "The Hunter — one of the most recognizable winter constellations",
+    "bestMonths": [11, 0, 1, 2]
+  },
+  {
+    "name": "SCORPIUS",
+    "abbreviation": "SCO",
+    "viewingWindow": "21:00 – 03:30",
+    "description": "The Scorpion — dominant summer constellation near the galactic center",
+    "bestMonths": [5, 6, 7]
+  },
+  {
+    "name": "CYGNUS",
+    "abbreviation": "CYG",
+    "viewingWindow": "22:00 – 05:00",
+    "description": "The Swan — part of the Summer Triangle, rich in nebulae",
+    "bestMonths": [5, 6, 7, 8]
+  },
+  {
+    "name": "LYRA",
+    "abbreviation": "LYR",
+    "viewingWindow": "21:00 – 04:00",
+    "description": "The Lyre — home of Vega, one of the brightest stars",
+    "bestMonths": [5, 6, 7, 8]
+  },
+  {
+    "name": "SAGITTARIUS",
+    "abbreviation": "SGR",
+    "viewingWindow": "21:30 – 04:00",
+    "description": "The Archer — points toward the galactic center",
+    "bestMonths": [6, 7, 8]
+  },
+  {
+    "name": "LEO",
+    "abbreviation": "LEO",
+    "viewingWindow": "21:00 – 04:00",
+    "description": "The Lion — prominent spring constellation with bright Regulus",
+    "bestMonths": [2, 3, 4]
+  },
+  {
+    "name": "VIRGO",
+    "abbreviation": "VIR",
+    "viewingWindow": "21:00 – 04:00",
+    "description": "The Maiden — second largest constellation, contains Spica",
+    "bestMonths": [3, 4, 5]
+  },
+  {
+    "name": "PEGASUS",
+    "abbreviation": "PEG",
+    "viewingWindow": "21:00 – 04:00",
+    "description": "The Winged Horse — autumn sky anchor",
+    "bestMonths": [8, 9, 10]
+  },
+  {
+    "name": "GEMINI",
+    "abbreviation": "GEM",
+    "viewingWindow": "20:00 – 04:00",
+    "description": "The Twins — Castor and Pollux mark the twin stars",
+    "bestMonths": [1, 2, 3]
+  },
+  {
+    "name": "TAURUS",
+    "abbreviation": "TAU",
+    "viewingWindow": "19:00 – 02:00",
+    "description": "The Bull — contains the Pleiades and Hyades clusters",
+    "bestMonths": [11, 0, 1, 2]
+  },
+  {
+    "name": "ANDROMEDA",
+    "abbreviation": "AND",
+    "viewingWindow": "21:00 – 04:00",
+    "description": "Home to the Andromeda Galaxy — closest galaxy to the Milky Way",
+    "bestMonths": [8, 9, 10, 11]
+  },
+  {
+    "name": "AQUILA",
+    "abbreviation": "AQL",
+    "viewingWindow": "20:00 – 03:30",
+    "description": "The Eagle — anchors Altair of the Summer Triangle",
+    "bestMonths": [6, 7, 8]
+  },
+  {
+    "name": "URSA MAJOR",
+    "abbreviation": "UMA",
+    "viewingWindow": "All Night",
+    "description": "The Great Bear — home of the Big Dipper asterism",
+    "bestMonths": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+  },
+  {
+    "name": "BOÖTES",
+    "abbreviation": "BOO",
+    "viewingWindow": "21:00 – 04:00",
+    "description": "The Herdsman — contains the bright star Arcturus",
+    "bestMonths": [3, 4, 5, 6]
+  },
+  {
+    "name": "PERSEUS",
+    "abbreviation": "PER",
+    "viewingWindow": "20:00 – 04:00",
+    "description": "The Hero — home to the famous Perseid meteor shower radiant",
+    "bestMonths": [10, 11, 0, 1]
+  }
+]
