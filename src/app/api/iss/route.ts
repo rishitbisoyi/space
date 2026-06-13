@@ -7,8 +7,13 @@ export async function GET() {
 
     return NextResponse.json(data);
   } catch (error) {
+    console.error("ISS API Error:", error);
+
     return NextResponse.json(
-      { error: "Failed to fetch ISS location" },
+      {
+        error: "Failed to fetch ISS location",
+        details: String(error),
+      },
       { status: 500 }
     );
   }
