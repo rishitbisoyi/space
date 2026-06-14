@@ -1,5 +1,4 @@
-// @ts-ignore
-import "./duniya.css";
+
 
 export default function RootLayout({
   children,
