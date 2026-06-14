@@ -14,7 +14,7 @@ A modern space exploration platform built with **Next.js**, **React**, and **Typ
 
 ## 🌟 Overview
 
-**StarTrek** [star-trek-obs.vercel.app] is an interactive astronomy and space exploration dashboard designed to make space science more engaging, educational, and accessible.
+**StarTrek** [Vercel link](https://star-trek-obs.vercel.app/)] is an interactive astronomy and space exploration dashboard designed to make space science more engaging, educational, and accessible.
 
 The platform integrates real-time data sources, curated astronomy datasets, and a retro-inspired mission control interface to provide users with a comprehensive space exploration experience.
 
